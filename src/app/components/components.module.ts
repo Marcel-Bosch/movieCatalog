@@ -3,18 +3,26 @@ import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './navbar/navbar.component';
 import { RouterModule } from '@angular/router';
 import { SlideShowComponent } from './slide-show/slide-show.component';
+import { MoviesPosterGridComponent } from './movies-poster-grid/movies-poster-grid.component';
+import { RatingModule } from 'ng-starrating';
+import { PipesModule } from '../pipes/pipes.module';
+
+
 
 
 
 @NgModule({
-  declarations: [NavbarComponent, SlideShowComponent],
+  declarations: [NavbarComponent, SlideShowComponent, MoviesPosterGridComponent],
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    RatingModule,
+    PipesModule
   ],
   exports: [
     NavbarComponent,
-    SlideShowComponent
+    SlideShowComponent,
+    MoviesPosterGridComponent
   ]
 })
 export class ComponentsModule { }
