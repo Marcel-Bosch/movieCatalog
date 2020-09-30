@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { tap,map } from 'rxjs/operators';
+import { tap, map, catchError } from 'rxjs/operators';
+import { Cast, CreditsResponse } from '../interfaces/credits-response';
+import { MovieResponse } from '../interfaces/movie-response';
 
 import { Movie, NowPlaying } from '../interfaces/nowPlaying-response';
 
@@ -27,16 +29,16 @@ export class MoviesService {
 
   getNowPlaying(): Observable<Movie[]> {
 
-    if(this.loading){
+    if (this.loading) {
       return of([])
     }
 
     this.loading = true;
-    
+
     return this.http.get<NowPlaying>(`${this.baseUrl}movie/now_playing`, {
       params: this.params
     }).pipe(
-      map((resp)=>resp.results),
+      map((resp) => resp.results),
       tap(() => {
         this.nowPlayingPage += 1;
         this.loading = false;
@@ -44,4 +46,33 @@ export class MoviesService {
     );
   }
 
+  searchMovies(txt: string): Observable<Movie[]> {
+    //https://api.themoviedb.org/3/search/movie
+    const params = { ...this.params, page: '1', query: txt };
+    return this.http.get<NowPlaying>(`${this.baseUrl}search/movie`, {
+      params
+    }).pipe(
+      map(resp => resp.results)
+    )
+  }
+  resetPlayingPage() {
+    this.nowPlayingPage = 1;
+  }
+
+  getMovieDetail(id: string) {
+    return this.http.get<MovieResponse>(`${this.baseUrl}movie/${id}`, {
+      params: this.params
+    }).pipe(
+      catchError(err => of(null))
+    )
+  }
+
+  getCast(id: string): Observable<Cast[]> {
+    return this.http.get<CreditsResponse>(`${this.baseUrl}movie/${id}/credits`, {
+      params: this.params
+    }).pipe(
+      map(resp => resp.cast),
+      catchError(err => of([]))
+    );
+  }
 }

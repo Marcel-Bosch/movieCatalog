@@ -1,1 +1,7 @@
-<p>search works!</p>
+<h1>Resultado de la búsqueda: <small>"{{searchTxt}}"</small></h1>
+<hr>
+<div class="row">
+    <div class="col">
+        <app-movies-poster-grid [movies]="movies" *ngIf="movies.length>0"></app-movies-poster-grid>
+    </div>
+</div>
